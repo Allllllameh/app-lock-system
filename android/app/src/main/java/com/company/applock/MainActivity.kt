@@ -13,6 +13,9 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.json.buildJsonArray
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
+import io.github.jan.supabase.gotrue.auth
+import io.github.jan.supabase.gotrue.providers.builtin.Email
+import io.github.jan.supabase.postgrest.from
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,7 +28,7 @@ class MainActivity : AppCompatActivity() {
         btn.setOnClickListener {
             CoroutineScope(Dispatchers.Main).launch {
                 try {
-                    Supabase.client.auth.signInWith(io.github.jan.supabase.gotrue.providers.builtin.Email) {
+                    Supabase.client.auth.signInWith(Email) {
                         this.email = email.text.toString()
                         password = pass.text.toString()
                     }
