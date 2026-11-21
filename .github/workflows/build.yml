@@ -23,7 +23,7 @@ jobs:
 
     - name: Generate Gradle Wrapper
       working-directory: ./android
-      run: gradle wrapper --gradle-version 8.2 --distribution-type bin
+      run: gradle wrapper --gradle-version 8.2
 
     - name: Build with Gradle
       working-directory: ./android
