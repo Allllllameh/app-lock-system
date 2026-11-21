@@ -1,4 +1,5 @@
 package com.company.applock
+
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
@@ -9,7 +10,9 @@ import androidx.appcompat.app.AppCompatActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.serialization.json.*
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.jsonPrimitive
+import io.github.jan.supabase.postgrest.from
 
 class LockScreenActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,14 +31,19 @@ class LockScreenActivity : AppCompatActivity() {
         CoroutineScope(Dispatchers.Main).launch {
             try {
                 val result = Supabase.client.from("access_codes").select {
-                    filter { eq("code", code); eq("is_used", false) }
+                    filter {
+                        eq("code", code)
+                        eq("is_used", false)
+                    }
                 }.decodeSingleOrNull<JsonObject>()
 
                 if (result != null) {
                     Toast.makeText(this@LockScreenActivity, "رمز صحیح!", Toast.LENGTH_SHORT).show()
                     val codeId = result["id"]?.jsonPrimitive?.content
                     if (codeId != null) {
-                        Supabase.client.from("access_codes").update({ set("is_used", true) }) { filter { eq("id", codeId) } }
+                        Supabase.client.from("access_codes").update({ set("is_used", true) }) {
+                            filter { eq("id", codeId) }
+                        }
                     }
                     finish()
                 } else {
